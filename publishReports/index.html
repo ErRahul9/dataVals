@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Processing</title>
+
+</head>
+<body>
+    <h1>Enter Start Date , End Date and campaign_id</h1>
+    <form action="/" method="POST">
+        <label for="starttime">Start Date:</label>
+        <input type="datetime-local" id="starttime" name="starttime" required><br>
+
+        <label for="endtime">End Date:</label>
+        <input type="datetime-local" id="endtime" name="endtime" required><br>
+
+        <label for="campaign_id">campaign_id:</label>
+        <input type="text" id="campaign_id" name="campaign_id" required><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+<body>
+    <h1>Data Processing Results</h1>
+
+    {% if df is defined %}
+    <table border="1">
+  <tr>
+<th>advertiser_id</th>
+<th>campaign_id</th>
+<th>date</th>
+<th>daily_budget</th>
+<th>daily_spend</th>
+<th>frequency_cap</th>
+<th>impression_count</th>
+<th>unique_impression_count</th>
+<th>conversions</th>
+<th>difference</th>
+</tr>
+{% for index, row in df.iterrows() %}
+<tr>
+<td>{{ row['advertiser_id'] }}</td>
+<td>{{ row['campaign_id'] }}</td>
+<td>{{ row['date'] }}</td>
+<td>{{ row['median_daily_budget'] }}</td>
+<td>{{ row['media_cost'] }}</td>
+<td>{{ row['median_fcap_duration'] }}</td>
+<td>{{ row['imps'] }}</td>
+<td>{{ row['uniques'] }}</td>
+<td>{{ row['convs'] }}</td>
+<td>{{ row['over/Under'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+    <a href="/">Go Back</a>
+</body>
+</html>

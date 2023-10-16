@@ -1,0 +1,6 @@
+{
+"deviceBudget": "select * from bidder.campaign_budget_by_device where campaign_id in (select campaign_id from campaigns where campaign_group_id = 54772);",
+"": ""
+
+
+}

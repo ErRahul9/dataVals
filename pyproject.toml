@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "prodincidents"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+sqlalchemy = "^2.0.21"
+tabulate = "^0.9.0"
+args = "^0.1.0"
+flask = "^3.0.0"
+redis = "^5.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

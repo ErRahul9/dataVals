@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Processed Data</title>
+    <style>
+        /* Apply CSS styles for better formatting */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+        /* CSS for input fields and form */
+        form {
+            margin: 20px auto;
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="date"], input[type="text"], input[type="submit"] {
+            display: block;
+            margin: 10px auto;
+            padding: 8px;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Processed Data</h1>
+
+    <!-- Input form for start date, end date, and ID -->
+   <body>
+    <h1>Enter Start Date , End Date and campaign_id</h1>
+    <form action="/" method="POST">
+        <label for="starttime">Start Date:</label>
+        <input type="datetime-local" id="starttime" name="starttime" required><br>
+        <label for="endtime">End Date:</label>
+        <input type="datetime-local" id="endtime" name="endtime" required><br>
+        <label for="campaign_id">campaign_id:</label>
+        <input type="text" id="campaign_id" name="campaign_id" required><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+    <!-- Display the processed DataFrame (same as before) -->
+
+    <h1>Data Processing Results</h1>
+
+    {% if df is defined %}
+    <table border="1">
+  <tr>
+<th>advertiser_id</th>
+<th>campaign_id</th>
+<th>line_item_id</th>
+<th>hourly_budget</th>
+<th>device_type_budget_percent</th>
+<th>bid_hour</th>
+<th>devicetype</th>
+<th>win_counts</th>
+<th>hourly_spend</th>
+</tr>
+{% for index, row in df.iterrows() %}
+<tr>
+<td>{{ row['advertiser_id'] }}</td>
+<td>{{ row['campaign_id'] }}</td>
+<td>{{ row['line_item_id'] }}</td>
+<td>{{ row['hourly_budget'] }}</td>
+<td>{{ row['device_type_budget_percent'] }}</td>
+<td>{{ row['bid_hour'] }}</td>
+<td>{{ row['devicetype'] }}</td>
+<td>{{ row['win_counts'] }}</td>
+<td>{{ row['hourly_spend'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    <a href="/">Go Back</a>
+</body>
+</html>
