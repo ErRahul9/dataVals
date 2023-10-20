@@ -140,6 +140,7 @@ def campStats(camp):
     df_final_with_tgt = pd.merge(df_final,df_tgt,on=['campaign_id','date'],how='outer')
     df_final_with_tgt["over/Under"] = df_final_with_tgt["median_daily_budget"] - df_final_with_tgt["media_cost"]
     print(tabulate(df_final_with_tgt, headers='keys', tablefmt='grid'))
+    df_final_with_tgt.to_csv(f'reports/output_{camp}_DCO_Spend.csv', index=False)
     return df_final_with_tgt
 
 
@@ -157,42 +158,44 @@ def cmpGetHourlyStats(line_item_id,campaign_id):
     df_budget["line_item_id"] = df_budget["line_item_id"].astype('int64')
     df_wins_spends = pd.read_sql(getWins, engine_core, params=params).sort_values(by='bid_hour')
     df_wins_spends["line_item_id"] = df_wins_spends["line_item_id"].astype('int64')
+    df_wins_spends.rename(columns={'devicetype': 'deviceType'}, inplace=True)
     df_completeStats = df_wins_spends.merge(df_budget,on=["line_item_id"],how="outer")
-    # print(df_completeStats)
-    filtered_df_TV = df_completeStats[df_completeStats['devicetype'].isin(['CONNECTED_TV', 'SET_TOP_BOX', 'GAMES_CONSOLE'])]
-    aggregated_spend = filtered_df_TV.groupby('bid_hour')['hourly_spend'].sum()
-    # aggregated_spend = aggregated_spend.assign(devicetype="CONNECTED_TV")
-
-    # print(aggregated_spend)
-
-
-
-
-
-    # order = ["advertiser_id","campaign_id","line_item_id",
-    #          "hourly_budget","device_type_budget_percent","devicetype",
-    #          "bid_hour",
-    #          "win_counts",
-    #          "hourly_spend"]
-    # ordered = df_completeStats[order]
-    # ordered.to_csv(f'output_{line_item_id}_{campaign_id}.csv', index=False)
-    # if len(ordered) > 0:
-    #     ordered['hour'] = ordered['bid_hour'].dt.hour
-    #     grouped = ordered.groupby(['hour', 'devicetype'])['hourly_spend'].sum().unstack().fillna(0)
-    #     fig, ax = plt.subplots(figsize=(12, 6))
-    #     grouped.plot(kind='bar', ax=ax)
-    #     plt.xlabel('Hour of the Day')
-    #     plt.ylabel('Hourly Spend')
-    #     plt.title(
-    #         f'Hourly Spend by Platform Device Type {df_wins_spends["bid_hour"].iloc[0].strftime("%Y-%m-%d %H:%M:%S")}')
-    #     plt.legend(title='Platform Device Type')
-    #     current_time = datetime.datetime.now()
-    #     timestamp = current_time.strftime("%Y%m%d%H%M%S")
-    #     filename = f"{campaign_id}_{timestamp}.png"
-    #     plt.savefig(filename)
-    #     plt.show()
-    # else:
-    #     print("skipping plot")
+    device_type_df = pd.DataFrame([
+         {"deviceType": "CONNECTED_TV", "DeviceTypeGroup": "CONNECTED_TV"},
+         {"deviceType": "CONNECTED_DEVICE", "DeviceTypeGroup": "CONNECTED_TV"},
+         {"deviceType": "SET_TOP_BOX", "DeviceTypeGroup": "CONNECTED_TV"},
+         {"deviceType": "GAMES_CONSOLE", "DeviceTypeGroup": "CONNECTED_TV"},
+         {"deviceType": "MOBILE", "DeviceTypeGroup": "MOBILE"},
+         {"deviceType": "PHONE", "DeviceTypeGroup": "MOBILE"},
+         {"deviceType": "TABLET", "DeviceTypeGroup": "TABLET"},
+         {"deviceType": "PC", "DeviceTypeGroup": "COMPUTER"},
+         {"deviceType": "UNKNOWN", "DeviceTypeGroup": "UNKNOWN"},
+    ])
+    df = df_completeStats.merge(device_type_df, left_on="deviceType", right_on ="deviceType", how ="left")
+    order = ["advertiser_id","campaign_id","line_item_id",
+             "hourly_budget","device_type_budget_percent","deviceType","DeviceTypeGroup",
+             "bid_hour",
+             "win_counts",
+             "hourly_spend"]
+    ordered = df[order]
+    ordered.to_csv(f'reports/output_{line_item_id}_{campaign_id}.csv', index=False)
+    if len(ordered) > 0:
+        ordered['hour'] = ordered['bid_hour'].dt.hour
+        grouped = ordered.groupby(['hour', 'DeviceTypeGroup'])['hourly_spend'].sum().unstack().fillna(0)
+        fig, ax = plt.subplots(figsize=(12, 6))
+        grouped.plot(kind='bar', ax=ax)
+        plt.xlabel('Hour of the Day')
+        plt.ylabel('Hourly Spend')
+        plt.title(
+            f'Hourly Spend by Platform Device Type {df_wins_spends["bid_hour"].iloc[0].strftime("%Y-%m-%d %H:%M:%S")}')
+        plt.legend(title='Platform Device Type')
+        current_time = datetime.datetime.now()
+        timestamp = current_time.strftime("%Y%m%d%H%M%S")
+        filename = f"reports/{campaign_id}_{timestamp}.png"
+        plt.savefig(filename)
+        plt.show()
+    else:
+        print("skipping plot")
 
 
 

@@ -161,25 +161,50 @@ class campaignStats():
                  "win_counts",
                  "hourly_spend"]
         ordered = df_completeStats[order]
+        ordered.to_csv(f'reports/output_{line_item_id}_{campaign_id}.csv', index=False)
+        # if len(ordered) > 0:
+        #     df = ordered.merge(device_type_df, left_on="platform_device_type", right_on="DeviceType", how="left")
+        #
+        #     # Convert 'bid_hour' to datetime
+        #     df['bid_hour'] = pd.to_datetime(df['bid_hour'])
+        #
+        #     # Extract the hour
+        #     df['hour'] = df['bid_hour'].dt.hour
+        #
+        #     # Group by hour and platform_device_type, and sum the hourly spend
+        #     grouped = df.groupby(['hour', 'platform_device_type'])['hourly_spend'].sum().unstack().fillna(0)
+        #
+        #     # Create a clustered column chart
+        #     fig, ax = plt.subplots(figsize=(12, 6))
+        #     grouped.plot(kind='bar', ax=ax)
+        #
+        #     # Set y-axis gaps of 1000
+        #     y_ticks = np.arange(0, grouped.values.max() + 2000, 2000)
+        #     ax.set_yticks(y_ticks)
+        #
+        #     plt.xlabel('Hour of the Day')
+        #     plt.ylabel('Hourly Spend')
+        #     plt.title('Hourly Spend by Platform Device Type')
+        #     plt.legend(title='Platform Device Type')
+        #
+        #     plt.show()
 
-        ordered.to_csv(f'output_{line_item_id}_{campaign_id}.csv', index=False)
-        if len(ordered) > 0:
-            ordered['hour'] = ordered['bid_hour'].dt.hour
-            grouped = ordered.groupby(['hour', 'devicetype'])['hourly_spend'].sum().unstack().fillna(0)
-            fig, ax = plt.subplots(figsize=(12, 6))
-            grouped.plot(kind='bar', ax=ax)
-            plt.xlabel('Hour of the Day')
-            plt.ylabel('Hourly Spend')
-            plt.title(
-                f'Hourly Spend by Platform Device Type {df_wins_spends["bid_hour"].iloc[0].strftime("%Y-%m-%d %H:%M:%S")}')
-            plt.legend(title='Platform Device Type')
-            current_time = datetime.datetime.now()
-            timestamp = current_time.strftime("%Y%m%d%H%M%S")
-            filename = f"{campaign_id}_{timestamp}.png"
-            plt.savefig(filename)
-            plt.show()
-        else:
-            print("skipping plot")
+            # ordered['hour'] = ordered['bid_hour'].dt.hour
+            # grouped = ordered.groupby(['hour', 'devicetype'])['hourly_spend'].sum().unstack().fillna(0)
+            # fig, ax = plt.subplots(figsize=(12, 6))
+            # grouped.plot(kind='bar', ax=ax)
+            # plt.xlabel('Hour of the Day')
+            # plt.ylabel('Hourly Spend')
+            # plt.title(
+            #     f'Hourly Spend by Platform Device Type {df_wins_spends["bid_hour"].iloc[0].strftime("%Y-%m-%d %H:%M:%S")}')
+            # plt.legend(title='Platform Device Type')
+            # current_time = datetime.datetime.now()
+            # timestamp = current_time.strftime("%Y%m%d%H%M%S")
+            # filename = f"{campaign_id}_{timestamp}.png"
+            # plt.savefig(filename)
+            # plt.show()
+        # else:
+        #     print("skipping plot")
         return ordered
 
 
