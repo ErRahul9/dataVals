@@ -197,7 +197,7 @@ def cmpGetHourlyStats(line_item_id,campaign_id):
     else:
         print("skipping plot")
 
-
+# {""CONNECTED_TV"": 0, ""MOBILE"": 100, ""TABLET"": 0, ""PC"": 0, ""UNKNOWN"": 0}
 
 
 
@@ -224,5 +224,5 @@ if __name__ == "__main__":
     lines = getLineItemId()
     for line,camps in lines.items():
         print(line,camps)
-        # campStats(camps)
-        cmpGetHourlyStats(line,camps)
+        campStats(camps)
+        # cmpGetHourlyStats(line,camps)

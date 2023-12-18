@@ -1,5 +1,6 @@
 select hour(a.time) as bid_hour,
 c.platform_device_type as deviceType,
+a.plat
 b.steelhouse_id as advertiser_id,count(a.auction_id) as bid_counts ,
 count(c.auction_id) as win_counts
 from bid_logs a join sync.beeswax_advertiser_mapping b on a.advertiser_id=b.partner_id

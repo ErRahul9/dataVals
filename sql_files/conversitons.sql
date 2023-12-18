@@ -1,5 +1,3 @@
-
-
 select sba.day::date as date,
        sba.advertiser_id,
        c.campaign_id,
